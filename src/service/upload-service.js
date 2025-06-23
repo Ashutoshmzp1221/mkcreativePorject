@@ -9,6 +9,7 @@ class UploadService {
 
     async uploadFile(data) {
         try {
+            data.metadata = JSON.parse(data.metadata);
             const response = await this.uploadRepository.create(data);
             const channel = getChannel();
             await publishMessage(channel, BINDING_KEY, JSON.stringify({ id: response.id }));
@@ -22,7 +23,6 @@ class UploadService {
     async getFile(uploadId) {
         try {
             const file = await this.uploadRepository.get(uploadId);
-            // console.log(file);
             return file;
         } catch (error) {
             console.log('Something went wrong');

@@ -16,7 +16,10 @@ export const uploadFile = (req, res) =>  {
             return res.status(201).json({
                 success: true,
                 message: 'Succesfully requested for uploading data',
-                data: response,
+                data : {
+                    upload_id: response.id,
+                    status: response.status
+                },
                 err: {}
             });
         })
@@ -33,11 +36,18 @@ export const uploadFile = (req, res) =>  {
 export const getStatus = async(req, res) => {
     try {
         const response = await uploadService.getFile(req.params.id);
-        console.log(response);
+        // console.log(response);
+        const data = {
+            upload_id: response.id,
+            filename: response.filename,
+            metadata: response.metadata,
+            status: response.status,
+            progress: response.progress
+        }
         return res.status(201).json({
             success: true,
             message: 'Successfully fetched file data',
-            data: response,
+            res: data,
             err: {}
         })
     } catch (error) {
@@ -45,6 +55,25 @@ export const getStatus = async(req, res) => {
             success: false,
             message: 'Not able fetched file data',
             data: {},
+            err: error
+        })
+    }
+}
+
+export const downloadFile = async (req, res) => {
+    try {
+        const response = await uploadService.getFile(req.params.id);
+        return res.status(201).json({
+            success: true,
+            message: 'Download link is fetched',
+            downloadLink: response.stored_path,
+            err: {}
+        })
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: 'Not able fetched Download link',
+            downloadLink: {},
             err: error
         })
     }

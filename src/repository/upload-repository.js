@@ -14,7 +14,6 @@ class UploadRepository {
     async get(id) {
         try {
             const file = await Upload.findByPk(id);
-            // console.log(file);
             return file;
         } catch (error) {
             console.log('something went wrong in the repository layer')
