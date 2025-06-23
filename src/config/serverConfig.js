@@ -8,7 +8,7 @@ const AWS_SECRET_ACCESS_KEY = process.env.AWS_SECRET_ACCESS_KEY;
 const ACCESS_KEY_ID = process.env.ACCESS_KEY_ID;
 const BUCKET_NAME = process.env.BUCKET_NAME;
 const EXCHANGE_NAME = process.env.EXCHANGE_NAME;
-const REMINDER_BINDING_KEY = process.env.REMINDER_BINDING_KEY;
+const BINDING_KEY = process.env.BINDING_KEY;
 const MESSAGE_BROKER_URL = process.env.MESSAGE_BROKER_URL;
 export {
     PORT,
@@ -17,6 +17,6 @@ export {
     ACCESS_KEY_ID,
     BUCKET_NAME,
     EXCHANGE_NAME,
-    REMINDER_BINDING_KEY,
+    BINDING_KEY,
     MESSAGE_BROKER_URL
 }

@@ -4,7 +4,7 @@ import { sleep } from './sleep.js'
 const uploadRepository = new UploadRepository();
 export const startJob = async (id) => {
     try {
-        await uploadRepository.update({progress : 10}, id);
+        await uploadRepository.update({progress : 10, status: 'processing'}, id);
 
         for(let i = 20; i <= 100; i += 20) {
             await sleep(5000);
