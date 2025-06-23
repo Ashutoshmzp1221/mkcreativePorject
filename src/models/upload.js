@@ -25,10 +25,6 @@ export const Upload = sequelize.define('Upload', {
     type: DataTypes.INTEGER,
     defaultValue: 0,
   },
-  error: {
-    type: DataTypes.STRING,
-    allowNull: true,
-  },
   stored_path: {
     type: DataTypes.STRING,
     allowNull: true,
