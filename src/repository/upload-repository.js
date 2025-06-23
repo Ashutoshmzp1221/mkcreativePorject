@@ -20,7 +20,15 @@ class UploadRepository {
             throw error;
         }
     }
-
+    async getAll() {
+        try {
+            const files = await Upload.findAll();
+            return files;
+        } catch (error) {
+            console.log('something went wrong in the repository layer')
+            throw error;
+        }
+    }
     async update(fileId, updateData) {
         try {
             const result = await Upload.update(updateData, {

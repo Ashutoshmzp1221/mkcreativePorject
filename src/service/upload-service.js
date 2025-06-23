@@ -29,6 +29,16 @@ class UploadService {
             throw error;
         }
     }
+
+    async getAllFiles() {
+        try {
+            const files = await this.uploadRepository.getAll();
+            return files;
+        } catch (error) {
+            console.log('Something went wrong');
+            throw error;
+        }
+    }
 }
 
 export default UploadService;

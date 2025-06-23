@@ -78,3 +78,22 @@ export const downloadFile = async (req, res) => {
         })
     }
 }
+
+export const getFiles = async(req, res) => {
+    try {
+        const response = await uploadService.getAllFiles();
+        return res.status(201).json({
+            success: true,
+            message: 'fetched all the files',
+            data: response,
+            err: {}
+        })
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: 'Not able fetched files',
+            data: {},
+            err: error
+        })
+    }
+}
