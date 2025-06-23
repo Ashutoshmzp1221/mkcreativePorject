@@ -1,0 +1,31 @@
+import UploadService from "../service/upload-service.js";
+import upload from "../config/file-upload.js";
+
+const uploadService = new UploadService();
+const singleUpload = upload.single('image');
+
+export const uploadFile = (req, res) =>  {
+    try {
+        singleUpload(req, res, async(err, data) => {
+            if(err) {
+                return res.status(500).json({error : err})
+            }
+            const payload = req.body;
+            payload.stored_path = req.file.location;
+            const response = await uploadService.uploadFile(payload);
+            return res.status(201).json({
+                success: true,
+                message: 'Succesfully requested for uploading data',
+                data: response,
+                err: {}
+            });
+        })
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: 'Not able upload',
+            data: {},
+            err: error
+        })
+    }
+}

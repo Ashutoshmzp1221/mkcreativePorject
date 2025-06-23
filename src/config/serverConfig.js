@@ -10,6 +10,7 @@ const BUCKET_NAME = process.env.BUCKET_NAME;
 const EXCHANGE_NAME = process.env.EXCHANGE_NAME;
 const BINDING_KEY = process.env.BINDING_KEY;
 const MESSAGE_BROKER_URL = process.env.MESSAGE_BROKER_URL;
+const QUEUE_NAME = process.env.QUEUE_NAME
 export {
     PORT,
     AWS_REGION,
@@ -18,5 +19,6 @@ export {
     BUCKET_NAME,
     EXCHANGE_NAME,
     BINDING_KEY,
-    MESSAGE_BROKER_URL
+    MESSAGE_BROKER_URL,
+    QUEUE_NAME
 }
