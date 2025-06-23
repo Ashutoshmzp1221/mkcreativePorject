@@ -4,9 +4,9 @@ import { sequelize } from '../config/db.js';
 
 export const Upload = sequelize.define('Upload', {
   id: {
-    type: DataTypes.UUID,
+    type: DataTypes.INTEGER,
     primaryKey: true,
-    allowNull: false,
+    autoIncrement: true,
   },
   filename: {
     type: DataTypes.STRING,

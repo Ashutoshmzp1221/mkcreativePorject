@@ -35,3 +35,5 @@ class UploadRepository {
         }
     }
 }
+
+export default UploadRepository;
