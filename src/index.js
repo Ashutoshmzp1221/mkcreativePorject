@@ -1,7 +1,7 @@
 import express from 'express';
 import bodyParser from 'body-parser';
-import { PORT } from './config/serverConfig.js';
-import { createChannel } from './config/rabbitmq.js'
+import { BINDING_KEY, PORT } from './config/serverConfig.js';
+import { createChannel,subscribeMessage } from './config/rabbitmq.js'
 import apiRoutes from './routes/index.js'
 
 const app = express();
@@ -10,7 +10,9 @@ const setUpAndStartServer = async () => {
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({extended: true}));
     await sequelize.sync();
-    await createChannel();
+    const channel = await createChannel();
+
+    await subscribeMessage(channel,undefined, BINDING_KEY);
     app.use('/api', apiRoutes);
     app.listen(PORT, async ()=> {
         console.log(`server is sarted at port ${PORT}`);

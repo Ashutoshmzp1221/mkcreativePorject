@@ -1,15 +1,19 @@
 import amqplib from 'amqplib';
+import { sequelize } from './db.js'
 import { MESSAGE_BROKER_URL, EXCHANGE_NAME, QUEUE_NAME } from './serverConfig.js';
 import { startJob } from '../utils/jobs.js';
 
 let channel = null;
 
 export const createChannel = async () => {
-    const connection = await amqplib.connect(MESSAGE_BROKER_URL);
-    channel = await connection.createChannel();
-    await channel.assertExchange(EXCHANGE_NAME, 'direct', false);
-    await channel.assertQueue(QUEUE_NAME);
-    await channel.bindQueue(QUEUE_NAME, EXCHANGE_NAME, QUEUE_NAME);
+    try {
+        const connection = await amqplib.connect(MESSAGE_BROKER_URL);
+        channel = await connection.createChannel(); // ✅ assign to global channel
+        await channel.assertExchange(EXCHANGE_NAME, 'direct', false);
+        return channel;
+    } catch (error) {
+        throw error;
+    }
 };
 
 export const getChannel = () => {
@@ -17,16 +21,29 @@ export const getChannel = () => {
     return channel;
 };
 
-export const publishMessage = async (channel, bindingKey, message) => {
-    channel.publish(EXCHANGE_NAME, bindingKey, Buffer.from(message));
+export const subscribeMessage = async (channel, service, binding_key) => {
+    try {
+        const applicationQueue = await channel.assertQueue(QUEUE_NAME);
+        channel.bindQueue(applicationQueue.queue, EXCHANGE_NAME, binding_key); // ✅ fix: use .queue
+        
+        channel.consume(applicationQueue.queue, async (msg) => {
+            if (msg !== null) {
+                await sequelize.sync();
+                const { id } = JSON.parse(msg.content.toString());
+                console.log(`📥 Received job for ID: ${id}`);
+                await startJob(id);
+                channel.ack(msg);
+            }
+        });
+    } catch (error) {
+        throw error;
+    }
 };
 
-export const subscribeMessage = async () => {
-    await channel.consume(QUEUE_NAME, async (msg) => {
-        if (msg !== null) {
-            const { id } = JSON.parse(msg.content.toString());
-            await startJob(id);
-            channel.ack(msg);
-        }
-    });
+export const publishMessage = async (channel, binding_key, message) => {
+    try {
+        await channel.publish(EXCHANGE_NAME, binding_key, Buffer.from(message));
+    } catch (error) {
+        throw error; 
+    }
 };

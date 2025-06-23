@@ -14,6 +14,7 @@ class UploadRepository {
     async get(id) {
         try {
             const file = await Upload.findByPk(id);
+            // console.log(file);
             return file;
         } catch (error) {
             console.log('something went wrong in the repository layer')
@@ -21,19 +22,20 @@ class UploadRepository {
         }
     }
 
-    async update(fielId , data) {
+    async update(fileId, updateData) {
         try {
-            await Upload.update(data, {
-                where : {
-                    id: fielId
+            const result = await Upload.update(updateData, {
+                where: {
+                    id: fileId
                 }
-            })
-            return true;
+            });
+            return result; // [number of updated rows]
         } catch (error) {
-            console.log('something went wrong in the repository layer')
+            console.log('Something went wrong in the repository layer');
             throw error;
         }
     }
+    
 }
 
 export default UploadRepository;

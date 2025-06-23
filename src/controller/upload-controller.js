@@ -29,3 +29,23 @@ export const uploadFile = (req, res) =>  {
         })
     }
 }
+
+export const getStatus = async(req, res) => {
+    try {
+        const response = await uploadService.getFile(req.params.id);
+        console.log(response);
+        return res.status(201).json({
+            success: true,
+            message: 'Successfully fetched file data',
+            data: response,
+            err: {}
+        })
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: 'Not able fetched file data',
+            data: {},
+            err: error
+        })
+    }
+}

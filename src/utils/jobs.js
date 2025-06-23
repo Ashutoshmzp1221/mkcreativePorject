@@ -1,17 +1,23 @@
 import UploadRepository from "../repository/upload-repository.js";
+import {sequelize} from '../config/db.js';
 import { sleep } from './sleep.js'
 
 const uploadRepository = new UploadRepository();
 export const startJob = async (id) => {
     try {
-        await uploadRepository.update({progress : 10, status: 'processing'}, id);
-
+        // await sequelize.sync();
+        const response = await uploadRepository.update(id, {progress : 10, status: 'processing'});
+        console.log(response);
+        // console.log('job started');
         for(let i = 20; i <= 100; i += 20) {
             await sleep(5000);
-            await uploadRepository.update({progress: i}, id);
+            // console.log('job num :', i);
+            await uploadRepository.update(id,{progress: i});
         }
-        await uploadRepository.update({status: 'completed'});
+        // console.log('jobend');
+        await uploadRepository.update(id, {status: 'completed'});
+        await sequelize.sync();
     } catch (error) {
-        await uploadRepository.update({status: 'failed'});
+        await uploadRepository.update(id, {status: 'failed'});
     }
 }
